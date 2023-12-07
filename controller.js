@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
     res.sendFile("index.html", {root: __dirname});
 })
 
-app.get("/registration.html", (req, res) => {
-    res.sendFile("registration.html", {root: __dirname});
+app.get("/register.html", (req, res) => {
+    res.sendFile("register.html", {root: __dirname});
 })
 
 app.get("/profile.html", (req, res) => {
