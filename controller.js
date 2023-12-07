@@ -4,10 +4,10 @@ const portNr = 8080;
 
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const res = require("express/lib/response");
+const jsonFilePath = "./data.json";
 
-// Anger path till var filen ska sparas
-const userDataPath = "./user.json";
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 //Anger att vår payload kommer komma i jsonformat
 app.use(bodyParser.json());
@@ -34,27 +34,12 @@ app.get("/failedLogin.html", (req, res) => {
     res.sendFile("failedLogin.html", {root: __dirname});
 })
 
-//Post endpoint som sparar payload i JSON format till en fil
-app.post("/", (req, res) => {
-    //Hämta data från Payload
-    const data = req.body;
-    const jsonData = JSON.stringify(data, null, 2);
-
-    //Skriva data till fil
-    fs.writeFile(userDataPath, jsonData, (err) => {
-        if (err) console.log(err);
-    });
-
-    res.send("Data mottagits: " + jsonData);
-})
-
-// Endpoint för inloggning
+//Endpoint för inloggning
 app.post("/login", (req, res) => {
+    const userDataPath = "./user.json";
 
     //Hämta payload data
     const loginUser = req.body;
-
-    console.log(loginUser)
 
     if (fs.existsSync(userDataPath)) {
         fs.readFile(userDataPath, "utf8", (err, users) => {
@@ -64,27 +49,61 @@ app.post("/login", (req, res) => {
                 res.send("Något har gått fel");
             }
 
-            users = JSON.parse(users);
+            console.log(loginUser);
 
-            users.forEach((user) => {
-                //Kontrollera om username och pass matchar
-                if(user.username == loginUser.username) {
-                    //Kontroll av lösen
-                    if (user.password == loginUser.password) {
-                        //Hittat match och login lyckas.
-                        res.sendFile("profile.html", {root: __dirname})
+            let userFound = false;
+            users = JSON.parse(users);
+            //const arru = Array.from(users);
+            users.forEach( (user) => {
+                //Kontrollera om username matchar, samt även password
+                if (user.username === loginUser.username) {
+                    userFound = true;
+                    //Kontrollera lösenordet
+                    if (user.password === loginUser.password) {
+                        //Hittat en match. Login lyckas.
+                         res.sendFile("profile.html", {root: __dirname});
                     }
-                    //Returnera fail om fel lösen
-                    res.sendFile("failedLogin.html", {root: __dirname})
+                    //Returnera Fail om fel lösenord
+                     else res.sendFile("failedLogin.html", {root: __dirname});
                 }
-        
             })
         
-            //returnera fail om ingen user hittas
-            res.sendFile("failedLogin.html", {root: __dirname})
-            
+            //Returnera fail om ingen user hittades
+            //   if (userFound == false) res.sendFile("failedLogin.html", {root: __dirname});
+             if (!userFound) res.sendFile("failedLogin.html", {root: __dirname});
+
         })
     } else {
         res.send("Filen finns inte");
     }
+
 })
+
+
+    // Ny användare 
+
+    app.post("/registration.html", (req, res) => {  
+        //sökväg till user.json
+        const userDataPath = "./user.json";
+
+        //hämta payload data
+        const newUser = req.body;
+
+        fs.readFile(userDataPath, "utf8", (err, users) => {
+            if (err) {
+                console.log(err);
+                res.send("Något har gått fel");
+            }
+
+            // Gör om sträng till array
+            users = JSON.parse(users);
+
+            //lägger till ny user i listan
+            users.push(newUser);
+
+            //spara tillbaka till user.json
+            fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
+                console.log('New user saved');
+            });
+        });       
+    })
