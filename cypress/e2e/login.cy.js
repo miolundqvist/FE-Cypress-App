@@ -32,7 +32,7 @@ describe('', () => {
         cy.get('h1').should('contain.text', 'Failed')
     })
 
-    it('Correct name, incorrect password', () => {
+    it('Correct username, incorrect password', () => {
         cy.get('#uname').type('User1');
         cy.get('#pass').type('wrongpass');
         cy.get('#subBtn').click();

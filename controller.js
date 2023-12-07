@@ -6,9 +6,6 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const jsonFilePath = "./data.json";
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-
 //Anger att vår payload kommer komma i jsonformat
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -34,6 +31,10 @@ app.get("/failedLogin.html", (req, res) => {
     res.sendFile("failedLogin.html", {root: __dirname});
 })
 
+app.get("/changePass.html", (req, res) => {
+    res.sendFile("changePass.html", {root: __dirname});
+})
+
 //Endpoint för inloggning
 app.post("/login", (req, res) => {
     const userDataPath = "./user.json";
@@ -48,8 +49,6 @@ app.post("/login", (req, res) => {
                 console.log(err);
                 res.send("Något har gått fel");
             }
-
-            console.log(loginUser);
 
             let userFound = false;
             users = JSON.parse(users);
@@ -107,3 +106,70 @@ app.post("/login", (req, res) => {
         
         res.redirect('/');
     })
+
+
+// Endpoint för att byta lösenord på en user
+app.post("/register/changepass", (req, res) => {  
+    //sökväg till user.json
+    const userDataPath = "./user.json";
+
+    //hämta payload data
+    const newPass = req.body;
+
+    fs.readFile(userDataPath, "utf8", (err, users) => {
+        if (err) {
+            console.log(err);
+            res.send("Något har gått fel");
+        }
+
+        // Gör om users från sträng till array
+        users = JSON.parse(users);
+
+        users.forEach((user, i, arr) => {
+            
+            if (user.username == newPass.username) {
+               //Uppdatera password i listan
+                user.password = newPass.password;
+            }
+        })
+
+        //spara tillbaka till user.json
+        fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
+            console.log('New password saved');
+        });
+    });
+    
+    res.redirect('/');
+})
+
+
+
+//Endpoint för att ta boty user
+app.post("/register/remove", (req, res) => {
+    //Sökväg till user.json
+    const userDataPath = "./user.json";
+
+    //Hämta payload data
+    const userToRemove = req.body;
+
+    fs.readFile(userDataPath, "utf8", (err, users) => {
+        //TODO: Kontrollera err om något har gått fel
+
+        //Konvertera users från string till Array
+        users = JSON.parse(users);
+
+        users.forEach((user, i, arr) => {
+            //Kontrollerar om user är den som skall tas bort
+            if (user.username == userToRemove.username) {
+                arr.splice(i, 1);
+            }
+        })
+
+        //Spara tillbaka till user.json fil
+        fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
+            console.log("NewUserSaved");
+        });
+    });
+
+    res.redirect("/");
+})
