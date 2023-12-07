@@ -69,7 +69,6 @@ app.post("/login", (req, res) => {
             })
         
             //Returnera fail om ingen user hittades
-            //   if (userFound == false) res.sendFile("failedLogin.html", {root: __dirname});
              if (!userFound) res.sendFile("failedLogin.html", {root: __dirname});
 
         })
@@ -80,9 +79,8 @@ app.post("/login", (req, res) => {
 })
 
 
-    // Ny användare 
-
-    app.post("/registration.html", (req, res) => {  
+// Endpoint för ny användare
+    app.post("/register", (req, res) => {  
         //sökväg till user.json
         const userDataPath = "./user.json";
 
@@ -95,7 +93,7 @@ app.post("/login", (req, res) => {
                 res.send("Något har gått fel");
             }
 
-            // Gör om sträng till array
+            // Gör om users från sträng till array
             users = JSON.parse(users);
 
             //lägger till ny user i listan
@@ -105,5 +103,7 @@ app.post("/login", (req, res) => {
             fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
                 console.log('New user saved');
             });
-        });       
+        });
+        
+        res.redirect('/');
     })
