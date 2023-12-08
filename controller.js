@@ -37,7 +37,6 @@ app.get("/changePass.html", (req, res) => {
 app.post("/login", (req, res) => {
     const userDataPath = "./user.json";
 
-    //Hämta payload data
     const loginUser = req.body;
 
     if (fs.existsSync(userDataPath)) {
@@ -50,22 +49,16 @@ app.post("/login", (req, res) => {
 
             let userFound = false;
             users = JSON.parse(users);
-            //const arru = Array.from(users);
             users.forEach( (user) => {
-                //Kontrollera om username matchar, samt även password
                 if (user.username === loginUser.username) {
                     userFound = true;
-                    //Kontrollera lösenordet
                     if (user.password === loginUser.password) {
-                        //Hittat en match. Login lyckas.
                          res.sendFile("profile.html", {root: __dirname});
                     }
-                    //Returnera Fail om fel lösenord
                      else res.sendFile("failedLogin.html", {root: __dirname});
                 }
             })
         
-            //Returnera fail om ingen user hittades
              if (!userFound) res.sendFile("failedLogin.html", {root: __dirname});
 
         })
@@ -78,10 +71,8 @@ app.post("/login", (req, res) => {
 
 // Create new user
     app.post("/register", (req, res) => {  
-        //sökväg till user.json
         const userDataPath = "./user.json";
 
-        //hämta payload data
         const newUser = req.body;
 
         fs.readFile(userDataPath, "utf8", (err, users) => {
@@ -90,13 +81,10 @@ app.post("/login", (req, res) => {
                 res.send("Något har gått fel");
             }
 
-            // Gör om users från sträng till array
             users = JSON.parse(users);
 
-            //lägger till ny user i listan
             users.push(newUser);
 
-            //spara tillbaka till user.json
             fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
                 console.log('New user saved');
             });
@@ -108,10 +96,8 @@ app.post("/login", (req, res) => {
 
 // Change password
 app.post("/register/changepass", (req, res) => {  
-    //sökväg till user.json
     const userDataPath = "./user.json";
 
-    //hämta payload data
     const newPass = req.body;
 
     fs.readFile(userDataPath, "utf8", (err, users) => {
@@ -120,18 +106,15 @@ app.post("/register/changepass", (req, res) => {
             res.send("Något har gått fel");
         }
 
-        // Gör om users från sträng till array
         users = JSON.parse(users);
 
         users.forEach((user, i, arr) => {
             
             if (user.username == newPass.username) {
-               //Uppdatera password i listan
                 user.password = newPass.password;
             }
         })
 
-        //spara tillbaka till user.json
         fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
             console.log('New password saved');
         });
@@ -142,26 +125,20 @@ app.post("/register/changepass", (req, res) => {
 
 // Remove user
 app.post("/register/remove", (req, res) => {
-    //Sökväg till user.json
     const userDataPath = "./user.json";
 
-    //Hämta payload data
     const userToRemove = req.body;
 
     fs.readFile(userDataPath, "utf8", (err, users) => {
-        //TODO: Kontrollera err om något har gått fel
 
-        //Konvertera users från string till Array
         users = JSON.parse(users);
 
         users.forEach((user, i, arr) => {
-            //Kontrollerar om user är den som skall tas bort
             if (user.username == userToRemove.username) {
                 arr.splice(i, 1);
             }
         })
 
-        //Spara tillbaka till user.json fil
         fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
         });
     });
