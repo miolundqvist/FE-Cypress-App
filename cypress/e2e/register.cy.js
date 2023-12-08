@@ -36,6 +36,9 @@ describe('', () => {
 
         cy.get('h1').should('be.visible');
         cy.get('h1').should('contain.text', 'profile')
+
+        // Removes test user to keep the user.json clean
+        cy.request('POST', 'http://localhost:8080/register/remove', { username: 'Testuser' });
         
     })
 })

@@ -17,14 +17,6 @@
   },
   {
     "username": "Testuser",
-    "password": "Newpass"
-  },
-  {
-    "username": "Testuser",
-    "password": "Newpass"
-  },
-  {
-    "username": "Testuser",
-    "password": "Newpass"
+    "password": "Testpass"
   }
 ]

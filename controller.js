@@ -108,7 +108,7 @@ app.post("/login", (req, res) => {
     })
 
 
-// Endpoint för att byta lösenord på en user
+// Endpoint för att byta lösenord på en användare
 app.post("/register/changepass", (req, res) => {  
     //sökväg till user.json
     const userDataPath = "./user.json";
@@ -140,4 +140,33 @@ app.post("/register/changepass", (req, res) => {
     });
     
     res.redirect('/');
+})
+
+//Endpoint för att ta boty user
+app.post("/register/remove", (req, res) => {
+    //Sökväg till user.json
+    const userDataPath = "./user.json";
+
+    //Hämta payload data
+    const userToRemove = req.body;
+
+    fs.readFile(userDataPath, "utf8", (err, users) => {
+        //TODO: Kontrollera err om något har gått fel
+
+        //Konvertera users från string till Array
+        users = JSON.parse(users);
+
+        users.forEach((user, i, arr) => {
+            //Kontrollerar om user är den som skall tas bort
+            if (user.username == userToRemove.username) {
+                arr.splice(i, 1);
+            }
+        })
+
+        //Spara tillbaka till user.json fil
+        fs.writeFile(userDataPath, JSON.stringify(users, null, 2), (err) => {
+        });
+    });
+
+    res.redirect("/");
 })
