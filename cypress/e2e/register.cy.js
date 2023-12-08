@@ -4,21 +4,37 @@ describe('', () => {
         cy.visit('http://localhost:8080/');
     })
 
-    it('Register new user', () => {
-        cy.get('#uname').type('User1');
-        cy.get('#pass').type('Pass1');
+    it('Create new account', () => {
+        cy.get('#createAccBtn').click();
+        cy.get('#uname').type('Testuser');
+        cy.get('#pass').type('Testpass');
+        cy.get('#regBtn').click();
+        cy.get('#uname').type('Testuser');
+        cy.get('#pass').type('Testpass');
         cy.get('#subBtn').click();
 
+
         cy.get('h1').should('be.visible');
+        cy.get('h1').should('contain.text', 'profile')
         
     })
 
-    it('', () => {
-        cy.get('#uname').type('User1');
-        cy.get('#pass').type('Pass1');
+    it('Change user password', () => {
+        cy.get('#uname').type('Testuser');
+        cy.get('#pass').type('Testpass');
+        cy.get('#subBtn').click();
+        cy.get('#changePassBtn').click();
+        cy.get('#uname').type('Testuser');
+        cy.get('#pass').type('Newpass');
+        cy.get('#changePassBtn').click();
+
+        // Log in with the changed password
+        cy.get('#uname').type('Testuser');
+        cy.get('#pass').type('Newpass');
         cy.get('#subBtn').click();
 
         cy.get('h1').should('be.visible');
+        cy.get('h1').should('contain.text', 'profile')
         
     })
 })
