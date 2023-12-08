@@ -6,13 +6,11 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const jsonFilePath = "./data.json";
 
-//Anger att vår payload kommer komma i jsonformat
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-//Metod som meddelar när servern är igång
 app.listen(portNr, () => {
-    console.log('Servern lyssnar på 8080');
+    console.log('Server is listening on 8080');
 })
 
 app.get("/", (req, res) => {
@@ -35,7 +33,7 @@ app.get("/changePass.html", (req, res) => {
     res.sendFile("changePass.html", {root: __dirname});
 })
 
-//Endpoint för inloggning
+// Login
 app.post("/login", (req, res) => {
     const userDataPath = "./user.json";
 
@@ -78,7 +76,7 @@ app.post("/login", (req, res) => {
 })
 
 
-// Endpoint för ny användare
+// Create new user
     app.post("/register", (req, res) => {  
         //sökväg till user.json
         const userDataPath = "./user.json";
@@ -108,7 +106,7 @@ app.post("/login", (req, res) => {
     })
 
 
-// Endpoint för att byta lösenord på en användare
+// Change password
 app.post("/register/changepass", (req, res) => {  
     //sökväg till user.json
     const userDataPath = "./user.json";
@@ -142,7 +140,7 @@ app.post("/register/changepass", (req, res) => {
     res.redirect('/');
 })
 
-//Endpoint för att ta boty user
+// Remove user
 app.post("/register/remove", (req, res) => {
     //Sökväg till user.json
     const userDataPath = "./user.json";

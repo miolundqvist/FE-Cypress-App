@@ -1,4 +1,4 @@
-describe('', () => {
+describe('Tests for the log in', () => {
 
     beforeEach('test', () => {
         cy.visit('http://localhost:8080/');
@@ -51,9 +51,4 @@ describe('', () => {
         cy.get('h1').should('contain.text', 'Log in')
     })
 
-
-
-    // it('Register new user', () => {
-        
-    // })
 })
