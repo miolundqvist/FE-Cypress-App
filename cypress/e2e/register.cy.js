@@ -23,6 +23,7 @@ describe('', () => {
         cy.get('#uname').type('Testuser');
         cy.get('#pass').type('Testpass');
         cy.get('#subBtn').click();
+        cy.wait(500);
         cy.get('#changePassBtn').click();
         cy.get('#uname').type('Testuser');
         cy.get('#pass').type('Newpass');
