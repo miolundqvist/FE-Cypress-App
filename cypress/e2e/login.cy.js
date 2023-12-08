@@ -41,6 +41,18 @@ describe('', () => {
         cy.get('h1').should('contain.text', 'Failed')
     })
 
+    it('Back to the start page button', () => {
+        cy.get('#uname').type('User1');
+        cy.get('#pass').type('Pass1');
+        cy.get('#subBtn').click();
+        cy.get('#startPageBtn').click();
+
+        cy.get('h1').should('be.visible');
+        cy.get('h1').should('contain.text', 'Log in')
+    })
+
+
+
     // it('Register new user', () => {
         
     // })
