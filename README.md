@@ -17,7 +17,11 @@ To run the application:
 node controller.js
 ```
 
+Or with nodemon:
 
+```
+nodemon .
+```
 Once you have finished all the setup steps you can access the application in your web browser at: http://localhost:8080.
 
 ## Testing with Cypress
