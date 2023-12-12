@@ -28,7 +28,7 @@ In order to run the end-2-end tests in the Cypress app, type the following in a 
 npx cypress open
 ```
 
-To run Cypress from the command line:
+To execute Cypress tests from the command line:
 
 ```
 npx cypress run
